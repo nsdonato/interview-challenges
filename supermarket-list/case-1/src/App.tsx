@@ -1,5 +1,4 @@
 import type {Item} from "./types";
-
 import {useEffect, useState} from "react";
 
 import styles from "./App.module.scss";
@@ -18,8 +17,14 @@ function App() {
     );
   }
 
+
   function handleAdd(event: React.ChangeEvent<Form>) {
-    // Should implement
+    event.preventDefault()
+    const value = event.target.elements.nameItem.value
+
+    setItems([...items, { id: new Date().getTime(), text: value, completed: false}]);
+
+    event.target.elements.nameItem.value = ''
   }
 
   function handleRemove(id: Item["id"]) {
@@ -34,11 +39,11 @@ function App() {
     <main className={styles.main}>
       <h1>Supermarket list</h1>
       <form onSubmit={handleAdd}>
-        <input name="text" type="text" />
+        <input name="nameItem" type="text" autoFocus/>
         <button>Add</button>
       </form>
       <ul>
-        {items?.map((item) => (
+        {items?.length > 0 ? items?.map((item) => (
           <li
             key={item.id}
             className={item.completed ? styles.completed : ""}
@@ -46,7 +51,8 @@ function App() {
           >
             {item.text} <button onClick={() => handleRemove(item.id)}>[X]</button>
           </li>
-        ))}
+        ))
+      : <span>Cargando...</span>}
       </ul>
     </main>
   );
