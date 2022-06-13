@@ -7,7 +7,7 @@
 - [C] El search está desfazado y se llama muy frecuentemente.
 
 ## Nivel 3
-- [X] Debemos poder agregar y quitar productos a favoritos clickeandolos, los productos en favoritos deben tener la clase "fav".
+- [A] Debemos poder agregar y quitar productos a favoritos clickeandolos, los productos en favoritos deben tener la clase "fav".
 
 ## Extra
-- [ ] Los favoritos deben persistirse cuando recargamos la página.
+- [A] Los favoritos deben persistirse cuando recargamos la página.
