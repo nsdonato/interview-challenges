@@ -1,0 +1,38 @@
+img {
+	width: 100%;
+	object-fit: contain;
+}
+
+section {
+	padding: 16px;
+	flex: 1;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 12px;
+}
+
+article {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+article > div {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	height: 100%;
+}
+
+article > div > p:nth-of-type(1) {
+	font-weight: 500;
+	font-size: 20px;
+}
+
+article > div > p:nth-of-type(2) {
+	color: gray;
+}
+
+article > div > button {
+	margin-top: auto;
+}
