@@ -1,82 +1,70 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import api from './api'
 import { Card, Checkout, Footer, Header, Layout } from './components'
-import { CheckoutItems, Product, TCheckout } from './types'
+import { Product } from './types'
+
 
 function App() {
 	const [products, setProducts] = useState<Product[]>([])
-	const [checkout, setCheckout] = useState<TCheckout>({
-		totalPrice: 0,
-		items: [
-			{
-				id: '',
-				quantity: 0,
-				price: 0,
-			},
-		],
-	})
+	const [checkout, setCheckout] = useState(() => new Map())
 
 	useEffect(() => {
 		api.list().then(setProducts)
 	}, [])
 
-	const handleAddProduct = (id: string) => {
-		const product = products.find(item => item.id === id)
+	const handleAddProduct = (product: Product) => {
+		const checkoutCopy = structuredClone(checkout)
 
-		if (product) {
-			const totalPrice = checkout.totalPrice + product.price
+		checkoutCopy.set(product.id, {
+			quantity: checkoutCopy.has(product.id)
+				? checkoutCopy.get(product.id).quantity + 1
+				: 1,
+			price: product.price,
+		})
 
-			setCheckout({
-				totalPrice,
-				items: [
-					...checkout.items,
-					{
-						id: product.id,
-						quantity: 1,
-						price: product.price,
-					},
-				],
-			})
-		}
+		setCheckout(checkoutCopy)
 	}
 
-	const handleRemoveProduct = (id: string) => {
-		const item = checkout.items.find(item => item.id === id)!
-		const product = checkout.items.indexOf(item)
+	const handleRemoveProduct = (product: Product) => {
+		const checkoutCopy = structuredClone(checkout)
 
-		if (item) {
-			const totalPrice = checkout.totalPrice - item.price
-			const checkoutItems = [...checkout.items]
+		checkoutCopy.set(product.id, {
+			quantity: checkoutCopy.has(product.id)
+				? checkoutCopy.get(product.id).quantity - 1
+				: 0,
+			price: product.price,
+		})
 
-			checkoutItems.splice(product, 1)
-
-			setCheckout({
-				totalPrice,
-				items: checkoutItems,
-			})
-		}
+		setCheckout(checkoutCopy)
 	}
 
-	const quantity = () => {
-		return (
-			Number(checkout.items?.length > 0) &&
-			checkout.items.reduce((acc: number, item: CheckoutItems) => {
-				return acc + item.quantity
+	const { quantity, totalPrice} = useMemo(() => {
+		if (checkout.size > 0) {
+			return Array.from(checkout.values()).reduce((acc, item) => {
+				return {
+					quantity: acc + item.quantity,
+					totalPrice: acc + item.quantity * item.price,
+				}
 			}, 0)
-		)
-	}
+		} else {
+			return {
+				quantity: 0,
+				totalPrice: 0,
+			}
+		}
+	}, [checkout])
 
 	return (
 		<Layout>
 			<Header />
 			<Card
-				checkoutItems={checkout.items}
+				checkoutItems={checkout}
 				products={products}
 				onAdd={handleAddProduct}
 				onRemove={handleRemoveProduct}
 			/>
-			<Checkout quantity={quantity()} totalPrice={checkout.totalPrice} />
+			<Checkout quantity={quantity} totalPrice={totalPrice} />
 			<Footer />
 		</Layout>
 	)

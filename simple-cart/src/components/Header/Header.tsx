@@ -1,5 +1,7 @@
 import styles from './Header.module.css'
 
-export const Header = () => (
-	<header className={styles.header}>Estampitiency</header>
-)
+export const Header = () => {
+	console.log('Header')
+
+	return <header className={styles.header}>Estampitiency</header>
+}

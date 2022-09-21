@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Product, CheckoutItems } from '../../types'
 import styles from './Card.module.css'
 
 interface CardProps {
-	checkoutItems: CheckoutItems[]
+	checkoutItems: Map<string, CheckoutItems>
 	products: Product[]
-	onAdd: (id: string) => void
-	onRemove: (id: string) => void
+	onAdd: (id: Product) => void
+	onRemove: (id: Product) => void
 }
 
 export const Card = ({
@@ -14,12 +15,14 @@ export const Card = ({
 	onAdd,
 	onRemove,
 }: CardProps) => {
+	console.log('CARD')
+
 	return (
 		<section>
 			{products.map((product: Product) => {
-				const quantity = checkoutItems?.filter(
-					item => item.id === product.id
-				).length
+				const quantity = checkoutItems.has(product.id)
+					? checkoutItems.get(product.id)?.quantity!
+					: 0
 
 				return (
 					<article key={product.id}>
@@ -28,16 +31,14 @@ export const Card = ({
 							<p>{product.title}</p>
 							<p>{product.description}</p>
 						</div>
-						{/* TODO: Cuando hay mas de un producto Agregar debe ser +, mostrar cant de productos
-					en el carrito y el -
-					*/}
-						<button onClick={() => onAdd(product.id)}>
+
+						<button onClick={() => onAdd(product)}>
 							{quantity > 0 ? '+' : 'Agregar'}
 						</button>
 						{quantity > 0 && (
 							<>
 								<span>{quantity}</span>
-								<button onClick={() => onRemove(product.id)}>-</button>
+								<button onClick={() => onRemove(product)}>-</button>
 							</>
 						)}
 					</article>

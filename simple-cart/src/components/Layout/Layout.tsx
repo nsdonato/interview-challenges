@@ -4,6 +4,8 @@ interface LayoutProps {
 	children?: React.ReactNode
 }
 
-export const Layout = ({ children }: LayoutProps) => (
-	<main className={styles.main}>{children}</main>
-)
+export const Layout = ({ children }: LayoutProps) => {
+	console.log('Layout')
+
+	return <main className={styles.main}>{children}</main>
+}

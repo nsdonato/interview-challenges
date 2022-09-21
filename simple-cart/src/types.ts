@@ -7,7 +7,6 @@ export interface Product {
 }
 
 export type CheckoutItems = {
-	id: string
 	quantity: number
 	price: number
 }
