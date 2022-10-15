@@ -1,7 +1,6 @@
 import styles from './Footer.module.css'
 
 export const Footer = () => {
-	console.log('Footer')
 
 	return (
 		<footer className={styles.footer}>

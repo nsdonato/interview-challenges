@@ -1,27 +1,23 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { Product, CheckoutItems } from '../../types'
+import { useEffect, useState } from 'react'
+import api from '../../api'
+import { useCheckout } from '../../context/CheckoutContext'
+import { Product } from '../../types'
 import styles from './Card.module.css'
 
-interface CardProps {
-	checkoutItems: Map<string, CheckoutItems>
-	products: Product[]
-	onAdd: (id: Product) => void
-	onRemove: (id: Product) => void
-}
+export const Card = () => {
+	const { checkout, handleAddProduct: onAdd, handleRemoveProduct: onRemove } = useCheckout()
+	const [products, setProducts] = useState<Product[]>([])
 
-export const Card = ({
-	checkoutItems,
-	products,
-	onAdd,
-	onRemove,
-}: CardProps) => {
-	console.log('CARD')
+	useEffect(() => {
+		api.list().then(setProducts)
+	}, [])
 
 	return (
 		<section>
 			{products.map((product: Product) => {
-				const quantity = checkoutItems.has(product.id)
-					? checkoutItems.get(product.id)?.quantity!
+				const quantity = checkout.has(product.id)
+					? checkout.get(product.id)?.quantity!
 					: 0
 
 				return (

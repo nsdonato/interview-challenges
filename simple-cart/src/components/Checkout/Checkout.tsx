@@ -1,12 +1,10 @@
+import { useCheckout } from '../../context/CheckoutContext'
 import styles from './Checkout.module.css'
 
-interface CheckoutProps {
-	quantity?: number
-	totalPrice?: number
-}
+export const Checkout = () => {
+	console.log("checkout");
 
-export const Checkout = ({ quantity = 3, totalPrice = 12 }: CheckoutProps) => {
-	console.log('Checkout')
+	const { quantity, totalPrice } = useCheckout()
 
 	return (
 		<aside className={styles.aside}>
